@@ -16,9 +16,9 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="40dp"
         android:layout_marginEnd="8dp"
-        android:inputType="textCapWords"
         android:background="@drawable/searchviewshape"
         android:iconifiedByDefault="false"
+        android:inputType="textCapWords"
         android:queryHint="Enter your city name"
         android:searchIcon="@drawable/search"
         android:textColor="@color/black"
@@ -69,7 +69,7 @@
         android:id="@+id/max"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="16dp"
         android:fontFamily="@font/merriweathersans_regular"
         android:text="Max: 00.00 C"
         android:textColor="@color/black"
@@ -77,6 +77,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/weather" />
+
+    <TextView
+        android:id="@+id/feelslike"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:fontFamily="@font/merriweathersans_regular"
+        android:text="00.00 C"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/temp" />
 
     <TextView
         android:id="@+id/min"

@@ -70,6 +70,7 @@ class MainActivity : AppCompatActivity() {
                     val condition = weatherDataResponseBody.weather[0].main
                     val maxTemp = weatherDataResponseBody.main.temp_max.toString()
                     val minTemp = weatherDataResponseBody.main.temp_min.toString()
+                    val feelsLike = weatherDataResponseBody.main.feels_like.toString()
 
 
 //                    Log.d("tag", "Temperature: $temperature")
@@ -77,6 +78,7 @@ class MainActivity : AppCompatActivity() {
                     binding.weather.text = condition
                     binding.max.text = "Max: $maxTemp °C"
                     binding.min.text = "Min: $minTemp °C"
+                    binding.feelslike.text = "feels like: $feelsLike °C"
                     binding.humidity.text = "$humidity %"
                     binding.sea.text = "$seaLevel hPa"
                     binding.windspeed.text = "$windSpeed m/s"
