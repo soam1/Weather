@@ -96,6 +96,10 @@ class MainActivity : AppCompatActivity() {
                     binding.date.text = date()
                     binding.cityName.text = weatherDataResponseBody.name
 //                        binding.cityName.text = cityName
+                    binding.updated.text = "Updated at: ${time(System.currentTimeMillis())}"
+                    val lastUpdateTime = time(weatherDataResponseBody.dt.toLong())
+                    binding.updated.text =
+                        "Last updated at: ${lastUpdateTime}"
 
                     changeImagesAccordingToWeatherCondition(condition)
 
