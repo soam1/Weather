@@ -1,6 +1,8 @@
 package com.example.weatherappkotlin
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.widget.SearchView
 import androidx.activity.enableEdgeToEdge
@@ -17,22 +19,28 @@ class MainActivity : AppCompatActivity() {
         ActivityMainBinding.inflate(layoutInflater)
     }
 
+    private lateinit var handler: Handler
+    private lateinit var runnable: Runnable
+    private lateinit var lastCity: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(binding.root)
 
-
+        lastCity = "Meerut"
         fetchWeatherData("Meerut")
         searchCity()
+        //10 mins for now
+        scheduleWeatherDataFetch(600000)
     }
 
     private fun searchCity() {
         val searchView = binding.searchView
-        searchView.setOnQueryTextListener(object :
-            SearchView.OnQueryTextListener {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (query != null) {
+                    lastCity = query
                     fetchWeatherData(query)
                 }
                 return true
@@ -47,16 +55,14 @@ class MainActivity : AppCompatActivity() {
 
     private fun fetchWeatherData(cityName: String) {
         Log.d("tag", "inside fetchWeatherData")
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://api.openweathermap.org/data/2.5/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build().create(ApiInterface::class.java)
+        val retrofit = Retrofit.Builder().baseUrl("https://api.openweathermap.org/data/2.5/")
+            .addConverterFactory(GsonConverterFactory.create()).build()
+            .create(ApiInterface::class.java)
 
         val response = retrofit.getWeatherData(cityName, API_KEY, "metric")
         response.enqueue(object : retrofit2.Callback<WeatherItem> {
             override fun onResponse(
-                call: retrofit2.Call<WeatherItem>,
-                response: retrofit2.Response<WeatherItem>
+                call: retrofit2.Call<WeatherItem>, response: retrofit2.Response<WeatherItem>
             ) {
                 val weatherDataResponseBody = response.body()
                 if (response.isSuccessful && weatherDataResponseBody != null) {
@@ -157,5 +163,24 @@ class MainActivity : AppCompatActivity() {
     fun time(timestamp: Long): String {
         val sdf = java.text.SimpleDateFormat("HH:mm", Locale.getDefault())
         return sdf.format(java.util.Date(timestamp * 1000))
+    }
+
+
+    private fun scheduleWeatherDataFetch(interval: Long) {
+        handler = Handler(Looper.getMainLooper())
+        runnable = object : Runnable {
+            override fun run() {
+//                if (::lastCity.isInitialized)
+//                    fetchWeatherData(lastCity) // Replace "YourCityName" with the actual city name or a variable
+//                else fetchWeatherData("Meerut")
+                fetchWeatherData(lastCity)
+                handler.postDelayed(this, interval)
+            }
+        }
+        handler.post(runnable)
+    }
+
+    private fun stopWeatherDataFetch() {
+        handler.removeCallbacks(runnable)
     }
 }
