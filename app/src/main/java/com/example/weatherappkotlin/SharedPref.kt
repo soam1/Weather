@@ -41,5 +41,24 @@ class SharedPref(context: Context) {
         return sharedPreferences.getLong("update_time", 0)
     }
 
+    fun saveThresholdMinTemp(value: Double) {
+        val editor = sharedPreferences.edit()
+        editor.putFloat("minTemperature", value.toFloat())
+        editor.apply()
+    }
+
+    fun getThresholdMinTemp(): Double {
+        return sharedPreferences.getFloat("minTemperature", 278.0f).toDouble()
+    }
+
+    fun saveThresholdMaxTemp(value: Double) {
+        val editor = sharedPreferences.edit()
+        editor.putFloat("maxTemperature", value.toFloat())
+        editor.apply()
+    }
+
+    fun getThresholdMaxTemp(): Double {
+        return sharedPreferences.getFloat("maxTemperature", 315.0f).toDouble()
+    }
 
 }

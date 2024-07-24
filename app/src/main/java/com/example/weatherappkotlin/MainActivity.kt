@@ -1,12 +1,18 @@
 package com.example.weatherappkotlin
 
+import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.util.Log
 import android.widget.SearchView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.weatherappkotlin.databinding.ActivityMainBinding
 import retrofit2.Retrofit
@@ -127,6 +133,7 @@ class MainActivity : AppCompatActivity() {
                         binding.windspeed.text = "$windSpeed m/s"
 
                     }
+
 //                    binding.temp.text = "$temperature °C"
                     binding.weather.text = condition
                     //similarly for max and min temp
@@ -150,7 +157,125 @@ class MainActivity : AppCompatActivity() {
                         "Last updated at: ${lastUpdateTime}"
 
                     sharedPref.saveLastCity(weatherDataResponseBody.name)
+
                     changeImagesAccordingToWeatherCondition(condition)
+
+                    // Add to MainActivity.kt within weather data processing
+//                    val weatherData = WeatherData(
+//                        temperature,
+//                        condition
+//                    ) // Assume you have this from your API response
+//                    val thresholds = sharedPref.getThresholds()
+//                    if (WeatherThreshold(
+//                            thresholds.minTemperature,
+//                            thresholds.maxTemperature,
+//                            thresholds.conditions
+//                        ).checkThresholds(weatherData)
+//                    ) {
+//                        // Trigger an alert
+//                        // This could be a notification, a dialog, or a simple log message
+//                        Log.d("WeatherAlert", "Threshold exceeded for $weatherData")
+//                    }
+
+                    //check if temperature is more than max temp or less than min temp
+                    val maxTempThreshold = sharedPref.getThresholdMaxTemp()
+                    val minTempThreshold = sharedPref.getThresholdMinTemp()
+                    var tempToCompare = 0.0
+                    if (unit == "metric") {
+                        tempToCompare = temperature.toDouble() + 273.15
+
+                    } else if (unit == "imperial") {
+                        tempToCompare = ((temperature.toDouble() - 32) * 5 / 9 + 273.15)
+                    } else {
+                        tempToCompare = temperature.toDouble()
+                    }
+
+
+                    if (tempToCompare > maxTempThreshold) {
+                        Log.d("WeatherAlert", "Threshold exceeded for $weatherDataResponseBody")
+                        Toast.makeText(
+                            this@MainActivity,
+//                            "Threshold exceeded for $weatherDataResponseBody",
+                            "Temperature is more than MAXIMUM threshold",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        // Obtain the Vibrator service
+                        val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+
+                        // Check if the device has a vibrator
+                        if (vibrator.hasVibrator()) {
+                            // Vibrate for 500 milliseconds
+                            // For API 26 or above
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                vibrator.vibrate(
+                                    VibrationEffect.createOneShot(
+                                        500,
+                                        VibrationEffect.DEFAULT_AMPLITUDE
+                                    )
+                                )
+                            } else {
+                                // Deprecated in API 26
+                                vibrator.vibrate(500)
+                            }
+                        }
+
+                        // Create an AlertDialog Builder
+                        val builder = AlertDialog.Builder(this@MainActivity)
+                        builder.setTitle("Temperature Alert")
+                        builder.setMessage("Temperature is more than MAXIMUM threshold.")
+                        // Set a positive button and its click listener on alert dialog
+                        builder.setPositiveButton("OK") { dialog, _ ->
+                            dialog.dismiss()
+                        }
+                        // Finally, make the alert dialog using builder
+                        val dialog: AlertDialog = builder.create()
+                        // Display the alert dialog on app interface
+                        dialog.show()
+
+                    }
+                    if (tempToCompare < minTempThreshold) {
+                        Log.d("WeatherAlert", "Threshold exceeded for $weatherDataResponseBody")
+                        // Trigger an alert using an alertDialog
+                        Toast.makeText(
+                            this@MainActivity,
+//                            "Threshold exceeded for $weatherDataResponseBody",
+                            "Temperature is less than MINIMUM threshold",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        // Obtain the Vibrator service
+                        val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+
+                        // Check if the device has a vibrator
+                        if (vibrator.hasVibrator()) {
+                            // Vibrate for 500 milliseconds
+                            // For API 26 or above
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                vibrator.vibrate(
+                                    VibrationEffect.createOneShot(
+                                        500,
+                                        VibrationEffect.DEFAULT_AMPLITUDE
+                                    )
+                                )
+                            } else {
+                                // Deprecated in API 26
+                                vibrator.vibrate(500)
+                            }
+                        }
+
+                        // Create an AlertDialog Builder
+                        val builder = AlertDialog.Builder(this@MainActivity)
+                        builder.setTitle("Temperature Alert")
+                        builder.setMessage("Temperature is less than MINIMUM threshold.")
+                        // Set a positive button and its click listener on alert dialog
+                        builder.setPositiveButton("OK") { dialog, _ ->
+                            dialog.dismiss()
+                        }
+                        // Finally, make the alert dialog using builder
+                        val dialog: AlertDialog = builder.create()
+                        // Display the alert dialog on app interface
+                        dialog.show()
+
+                    }
 
                 }
             }
@@ -237,4 +362,21 @@ class MainActivity : AppCompatActivity() {
     private fun stopWeatherDataFetch() {
         handler.removeCallbacks(runnable)
     }
+
+    //simulating weather data
+    //for testing purpose
+//    fun simulateWeatherData(): WeatherData {
+//        // Simulate or input specific weather data here
+//        // For simplicity, returning a hardcoded value
+//        return WeatherData(temperature = 30.0, condition = "Rain")
+//    }
+//
+//    fun triggerAlertIfNeeded() {
+//        val weatherData = simulateWeatherData()
+//        if (checkThresholds(weatherData)) {
+//            // Trigger an alert
+//            Log.d("Alert", "Weather threshold exceeded: $weatherData")
+//            // You can extend this to show notifications or any other form of alert
+//        }
+//    }
 }

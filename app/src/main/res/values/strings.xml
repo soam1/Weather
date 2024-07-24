@@ -22,4 +22,11 @@
     <string name="save_summary_db_summary_on">Enabled</string>
     <string name="save_summary_db_summary_off">Disabled</string>
     <string name="unit_system_title">Unit System</string>
+
+
+    <!-- In src/main/res/values/strings.xml -->
+    <string name="min_temperature_title">Min Temperature for alert (Kelvin)</string>
+    <string name="min_temperature_dialog_title">Set Minimum Temperature</string>
+    <string name="max_temperature_title">Max Temperature for alert (Kelvin)</string>
+    <string name="max_temperature_dialog_title">Set Maximum Temperature</string>
 </resources>

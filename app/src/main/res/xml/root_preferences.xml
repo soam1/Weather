@@ -24,6 +24,19 @@
             app:key="unit_system"
             app:title="@string/unit_system_title"
             app:useSimpleSummaryProvider="true" />
+        <EditTextPreference
+            app:defaultValue="278"
+            app:dialogTitle="@string/min_temperature_dialog_title"
+            app:key="min_temperature"
+            app:title="@string/min_temperature_title"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:defaultValue="315"
+            app:dialogTitle="@string/max_temperature_dialog_title"
+            app:key="max_temperature"
+            app:title="@string/max_temperature_title"
+            app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
 
