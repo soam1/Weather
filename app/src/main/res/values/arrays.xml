@@ -25,9 +25,11 @@
     <string-array name="unit_system_entries">
         <item>Metric</item>
         <item>Imperial</item>
+        <item>Standard</item>
     </string-array>
     <string-array name="unit_system_values">
         <item>metric</item>
         <item>imperial</item>
+        <item>standard</item>
     </string-array>
 </resources>

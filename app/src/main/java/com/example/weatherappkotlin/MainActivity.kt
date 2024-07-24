@@ -80,7 +80,9 @@ class MainActivity : AppCompatActivity() {
             .addConverterFactory(GsonConverterFactory.create()).build()
             .create(ApiInterface::class.java)
 
-        val response = retrofit.getWeatherData(cityName, API_KEY, "metric")
+        val unit: String = sharedPref.getUnit().toString().lowercase(Locale.ROOT)
+//        val response = retrofit.getWeatherData(cityName, API_KEY, "metric")
+        val response = retrofit.getWeatherData(cityName, API_KEY, unit)
         response.enqueue(object : retrofit2.Callback<WeatherItem> {
             override fun onResponse(
                 call: retrofit2.Call<WeatherItem>, response: retrofit2.Response<WeatherItem>
@@ -101,14 +103,39 @@ class MainActivity : AppCompatActivity() {
 
 
 //                    Log.d("tag", "Temperature: $temperature")
-                    binding.temp.text = "$temperature °C"
+                    //check for which type of unit system is used and convert the temperature accordingly
+                    if (unit == "metric") {
+                        binding.temp.text = "$temperature °C"
+                        binding.feelslike.text = "feels like: $feelsLike °C"
+                        binding.max.text = "Max: $maxTemp °C"
+                        binding.min.text = "Min: $minTemp °C"
+                        //similarly for windspeed
+                        binding.windspeed.text = "$windSpeed m/s"
+
+                    } else if (unit == "imperial") {
+                        binding.temp.text = "$temperature °F"
+                        binding.feelslike.text = "feels like: $feelsLike °F"
+                        binding.max.text = "Max: $maxTemp °F"
+                        binding.min.text = "Min: $minTemp °F"
+                        binding.windspeed.text = "$windSpeed miles/h"
+
+                    } else {
+                        binding.temp.text = "$temperature K"
+                        binding.feelslike.text = "feels like: $feelsLike K"
+                        binding.max.text = "Max: $maxTemp K"
+                        binding.min.text = "Min: $minTemp K"
+                        binding.windspeed.text = "$windSpeed m/s"
+
+                    }
+//                    binding.temp.text = "$temperature °C"
                     binding.weather.text = condition
-                    binding.max.text = "Max: $maxTemp °C"
-                    binding.min.text = "Min: $minTemp °C"
-                    binding.feelslike.text = "feels like: $feelsLike °C"
+                    //similarly for max and min temp
+//                    binding.max.text = "Max: $maxTemp °C"
+//                    binding.min.text = "Min: $minTemp °C"
+//                    binding.feelslike.text = "feels like: $feelsLike °C"
                     binding.humidity.text = "$humidity %"
                     binding.sea.text = "$seaLevel hPa"
-                    binding.windspeed.text = "$windSpeed m/s"
+//                    binding.windspeed.text = "$windSpeed m/s"
                     binding.sunrise.text = "${time(sunrise)}"
                     binding.sunset.text = "${time(sunset)}"
                     binding.condition.text = condition
