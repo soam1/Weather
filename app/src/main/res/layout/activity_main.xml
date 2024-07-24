@@ -16,10 +16,12 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="40dp"
         android:layout_marginEnd="8dp"
+        android:inputType="textCapWords"
         android:background="@drawable/searchviewshape"
         android:iconifiedByDefault="false"
-        android:queryHint="search for a city"
+        android:queryHint="Enter your city name"
         android:searchIcon="@drawable/search"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
