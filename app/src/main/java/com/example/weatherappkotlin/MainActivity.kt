@@ -18,6 +18,7 @@ class MainActivity : AppCompatActivity() {
     private val binding: ActivityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
+    lateinit var sharedPref: SharedPref
 
     private lateinit var handler: Handler
     private lateinit var runnable: Runnable
@@ -27,9 +28,20 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(binding.root)
+        sharedPref = SharedPref(this)
 
-        lastCity = "Meerut"
-        fetchWeatherData("Meerut")
+
+        if (sharedPref.getLastCity() != null) {
+            lastCity = sharedPref.getLastCity().toString()
+            fetchWeatherData(lastCity)
+        } else {
+            lastCity = "Meerut"
+            sharedPref.saveLastCity(lastCity)
+            fetchWeatherData("Meerut")
+        }
+//        lastCity = "Meerut"
+//        sharedPref.saveLastCity(lastCity)
+//        fetchWeatherData("Meerut")
         searchCity()
         //10 mins for now
         scheduleWeatherDataFetch(600000)
@@ -41,6 +53,7 @@ class MainActivity : AppCompatActivity() {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (query != null) {
                     lastCity = query
+                    sharedPref.saveLastCity(query)
                     fetchWeatherData(query)
                 }
                 return true
@@ -101,6 +114,7 @@ class MainActivity : AppCompatActivity() {
                     binding.updated.text =
                         "Last updated at: ${lastUpdateTime}"
 
+                    sharedPref.saveLastCity(weatherDataResponseBody.name)
                     changeImagesAccordingToWeatherCondition(condition)
 
                 }
@@ -177,6 +191,7 @@ class MainActivity : AppCompatActivity() {
 //                if (::lastCity.isInitialized)
 //                    fetchWeatherData(lastCity) // Replace "YourCityName" with the actual city name or a variable
 //                else fetchWeatherData("Meerut")
+//                lastCity = sharedPref.getLastCity().toString()
                 fetchWeatherData(lastCity)
                 handler.postDelayed(this, interval)
             }
