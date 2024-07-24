@@ -16,4 +16,10 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
+
+    <string name="update_interval_title">Update Interval</string>
+    <string name="save_summary_db_title">Save Summary in Database</string>
+    <string name="save_summary_db_summary_on">Enabled</string>
+    <string name="save_summary_db_summary_off">Disabled</string>
+    <string name="unit_system_title">Unit System</string>
 </resources>

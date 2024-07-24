@@ -1,5 +1,6 @@
 package com.example.weatherappkotlin
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -42,9 +43,16 @@ class MainActivity : AppCompatActivity() {
 //        lastCity = "Meerut"
 //        sharedPref.saveLastCity(lastCity)
 //        fetchWeatherData("Meerut")
+        binding.settingsButton.setOnClickListener {
+            val intent = Intent(this, SettingsActivity::class.java)
+            startActivity(intent)
+        }
         searchCity()
         //10 mins for now
-        scheduleWeatherDataFetch(600000)
+        if (sharedPref.getUpdateTime() != 0L)
+            scheduleWeatherDataFetch(sharedPref.getUpdateTime())
+        else
+            scheduleWeatherDataFetch(600000)
     }
 
     private fun searchCity() {

@@ -20,4 +20,26 @@ class SharedPref(context: Context) {
     fun getLastCity(): String? {
         return sharedPreferences.getString(LAST_CITY, null)
     }
+
+    fun setUnit(value: String) {
+        val editor = sharedPreferences.edit()
+        editor.putString("unit", value)
+        editor.apply()
+    }
+
+    fun getUnit(): String? {
+        return sharedPreferences.getString("unit", null)
+    }
+
+    fun setUpdateTime(value: Long) {
+        val editor = sharedPreferences.edit()
+        editor.putLong("update_time", value)
+        editor.apply()
+    }
+
+    fun getUpdateTime(): Long {
+        return sharedPreferences.getLong("update_time", 0)
+    }
+
+
 }
