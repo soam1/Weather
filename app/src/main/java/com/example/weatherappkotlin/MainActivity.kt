@@ -80,8 +80,8 @@ class MainActivity : AppCompatActivity() {
             .addConverterFactory(GsonConverterFactory.create()).build()
             .create(ApiInterface::class.java)
 
-        val unit: String = sharedPref.getUnit().toString().lowercase(Locale.ROOT)
-//        val response = retrofit.getWeatherData(cityName, API_KEY, "metric")
+        var unit: String = sharedPref.getUnit().toString()
+            .lowercase(Locale.ROOT) //        val response = retrofit.getWeatherData(cityName, API_KEY, "metric")
         val response = retrofit.getWeatherData(cityName, API_KEY, unit)
         response.enqueue(object : retrofit2.Callback<WeatherItem> {
             override fun onResponse(

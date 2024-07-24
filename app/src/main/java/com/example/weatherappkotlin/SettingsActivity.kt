@@ -1,6 +1,7 @@
 package com.example.weatherappkotlin
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.ListPreference
 import androidx.preference.PreferenceFragmentCompat
@@ -36,12 +37,22 @@ class SettingsActivity : AppCompatActivity() {
                     "60" -> 60 * 60 * 1000L // Every 60 minutes
                     else -> 0
                 }
+                Toast.makeText(
+                    context,
+                    "Please restart the app to apply changes",
+                    Toast.LENGTH_SHORT
+                ).show()
                 sharedPref.setUpdateTime(updateTime)
                 true
             }
 
             findPreference<ListPreference>("unit_system")?.setOnPreferenceChangeListener { _, newValue ->
                 sharedPref.setUnit(newValue.toString())
+                Toast.makeText(
+                    context,
+                    "Please restart the app to apply changes",
+                    Toast.LENGTH_SHORT
+                ).show()
                 true
             }
         }
