@@ -109,18 +109,17 @@ like [OpenWeatherMap](https://openweathermap.org/). Add the API key to your proj
 1. Open the `WeatherApiClient.kt` file located in the `/network` package.
 2. Locate the `API_KEY` constant and replace the placeholder with your actual API key.
 
-   ```kotlin
-   const val API_KEY = "YOUR_API_KEY"
-   ```
-
 #### Permissions
 
 Ensure the following permissions are added in the `AndroidManifest.xml` file to access the internet:
 
 ```xml
 
-<uses-permission android:name="android.permission.INTERNET" /><uses-permission
-android:name="android.permission.ACCESS_NETWORK_STATE" />
+<application>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+</application>
+
 ```
 
 ## Detailed Component Breakdown
@@ -169,11 +168,6 @@ weather data:
 3. **Analyzing Charts**: Use the temperature and condition charts to analyze historical weather
    data.
 
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more
-information.
-
 ## Contributing
 
 Contributions are welcome! Follow these steps to contribute:
@@ -192,20 +186,54 @@ Contributions are welcome! Follow these steps to contribute:
 
 ## Screenshots
 
-![Screenshot 1](/screenshots/ss1.jpg)
-![Screenshot 2](/screenshots/ss2.jpg)
-![Screenshot 3](/screenshots/ss3.jpg)
-![Screenshot 4](/screenshots/ss4.jpg)
-![Screenshot 5](/screenshots/ss5.jpg)
-![Screenshot 6](/screenshots/ss6.jpg)
-![Screenshot 7](/screenshots/ss7.jpg)
-![Screenshot 8](/screenshots/ss8.jpg)
-![Screenshot 9](/screenshots/ss9.jpg)
-![Screenshot 10](/screenshots/ss10.jpg)
-![Screenshot 11](/screenshots/ss11.jpg)
-![Screenshot 12](/screenshots/ss12.jpg)
-![Screenshot 13](/screenshots/ss13.jpg)
-![Screenshot 14](/screenshots/ss14.jpg)
-![Screenshot 15](/screenshots/ss15.png)
+[//]: # ()
 
+[//]: # (![Screenshot 1]&#40;/screenshots/ss1.jpg&#41;)
+
+[//]: # (![Screenshot 2]&#40;/screenshots/ss2.jpg&#41;)
+
+[//]: # (![Screenshot 3]&#40;/screenshots/ss3.jpg&#41;)
+
+[//]: # (![Screenshot 4]&#40;/screenshots/ss4.jpg&#41;)
+
+[//]: # (![Screenshot 5]&#40;/screenshots/ss5.jpg&#41;)
+
+[//]: # (![Screenshot 6]&#40;/screenshots/ss6.jpg&#41;)
+
+[//]: # (![Screenshot 7]&#40;/screenshots/ss7.jpg&#41;)
+
+[//]: # (![Screenshot 8]&#40;/screenshots/ss8.jpg&#41;)
+
+[//]: # (![Screenshot 9]&#40;/screenshots/ss9.jpg&#41;)
+
+[//]: # (![Screenshot 10]&#40;/screenshots/ss10.jpg&#41;)
+
+[//]: # (![Screenshot 11]&#40;/screenshots/ss11.jpg&#41;)
+
+[//]: # (![Screenshot 12]&#40;/screenshots/ss12.jpg&#41;)
+
+[//]: # (![Screenshot 13]&#40;/screenshots/ss13.jpg&#41;)
+
+[//]: # (![Screenshot 14]&#40;/screenshots/ss14.jpg&#41;)
+
+[//]: # (![Screenshot 15]&#40;/screenshots/ss15.png&#41;)
+
+[//]: # ()
+
+
+<img src="/screenshots/ss1.jpg" width="300" />
+<img src="/screenshots/ss2.jpg" width="300" />
+<img src="/screenshots/ss3.jpg" width="300" />
+<img src="/screenshots/ss4.jpg" width="300" />
+<img src="/screenshots/ss5.jpg" width="300" />
+<img src="/screenshots/ss6.jpg" width="300" />
+<img src="/screenshots/ss7.jpg" width="300" />
+<img src="/screenshots/ss8.jpg" width="300" />
+<img src="/screenshots/ss9.jpg" width="300" />
+<img src="/screenshots/ss10.jpg" width="300" />
+<img src="/screenshots/ss11.jpg" width="300" />
+<img src="/screenshots/ss12.jpg" width="300" />
+<img src="/screenshots/ss13.jpg" width="300" />
+<img src="/screenshots/ss14.jpg" width="300" />
+<img src="/screenshots/ss15.png" width="300" />
 
