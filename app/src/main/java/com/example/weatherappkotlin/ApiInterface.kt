@@ -1,5 +1,6 @@
 package com.example.weatherappkotlin
 
+import com.example.weatherappkotlin.model.WeatherItem
 import retrofit2.Call
 import retrofit2.http.GET
 

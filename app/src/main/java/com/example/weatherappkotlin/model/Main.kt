@@ -1,4 +1,4 @@
-package com.example.weatherappkotlin
+package com.example.weatherappkotlin.model
 
 data class Main(
     val feels_like: Double,

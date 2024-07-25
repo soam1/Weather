@@ -1,4 +1,4 @@
-package com.example.weatherappkotlin
+package com.example.weatherappkotlin.ui
 
 import android.content.Context
 import android.content.Intent
@@ -12,16 +12,32 @@ import android.util.Log
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import com.example.weatherappkotlin.ApiInterface
+import com.example.weatherappkotlin.R
+import com.example.weatherappkotlin.SharedPref
 import com.example.weatherappkotlin.databinding.ActivityMainBinding
+import com.example.weatherappkotlin.model.WeatherItem
+import com.example.weatherappkotlin.ui.summary.WeatherSummaryActivity
+import com.example.weatherappkotlin.worker.DailySummaryWorker
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.Calendar
 import java.util.Locale
+import java.util.concurrent.TimeUnit
 
+//The dominant weather condition is determined by counting the occurrences of each condition throughout the day. The one with the highest count is considered dominant because it reflects the most frequent weather pattern experienced during that day.
 class MainActivity : AppCompatActivity() {
-    val API_KEY = "af122f1dc6328450b02797c8e139b1d0"
-    val BASE_URL = "https://api.openweathermap.org/data/2.5/"
+    companion object {
+        val API_KEY = "af122f1dc6328450b02797c8e139b1d0"
+        val BASE_URL = "https://api.openweathermap.org/data/2.5/"
+    }
+
     private val binding: ActivityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
@@ -31,13 +47,16 @@ class MainActivity : AppCompatActivity() {
     private lateinit var runnable: Runnable
     private lateinit var lastCity: String
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(binding.root)
         sharedPref = SharedPref(this)
 
-
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        scheduleDailySummaryWorker()
+//        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         if (sharedPref.getLastCity() != null) {
             lastCity = sharedPref.getLastCity().toString()
             fetchWeatherData(lastCity)
@@ -46,20 +65,22 @@ class MainActivity : AppCompatActivity() {
             sharedPref.saveLastCity(lastCity)
             fetchWeatherData("Meerut")
         }
-//        lastCity = "Meerut"
-//        sharedPref.saveLastCity(lastCity)
-//        fetchWeatherData("Meerut")
         binding.settingsButton.setOnClickListener {
             val intent = Intent(this, SettingsActivity::class.java)
             startActivity(intent)
         }
         searchCity()
-        //10 mins for now
         if (sharedPref.getUpdateTime() != 0L)
             scheduleWeatherDataFetch(sharedPref.getUpdateTime())
         else
             scheduleWeatherDataFetch(600000)
+
+        binding.moreButton.setOnClickListener {
+            val intent = Intent(this, WeatherSummaryActivity::class.java)
+            startActivity(intent)
+        }
     }
+
 
     private fun searchCity() {
         val searchView = binding.searchView
@@ -86,7 +107,7 @@ class MainActivity : AppCompatActivity() {
             .addConverterFactory(GsonConverterFactory.create()).build()
             .create(ApiInterface::class.java)
 
-        var unit: String = sharedPref.getUnit().toString()
+        val unit: String = sharedPref.getUnit().toString()
             .lowercase(Locale.ROOT) //        val response = retrofit.getWeatherData(cityName, API_KEY, "metric")
         val response = retrofit.getWeatherData(cityName, API_KEY, unit)
         response.enqueue(object : retrofit2.Callback<WeatherItem> {
@@ -160,22 +181,6 @@ class MainActivity : AppCompatActivity() {
 
                     changeImagesAccordingToWeatherCondition(condition)
 
-                    // Add to MainActivity.kt within weather data processing
-//                    val weatherData = WeatherData(
-//                        temperature,
-//                        condition
-//                    ) // Assume you have this from your API response
-//                    val thresholds = sharedPref.getThresholds()
-//                    if (WeatherThreshold(
-//                            thresholds.minTemperature,
-//                            thresholds.maxTemperature,
-//                            thresholds.conditions
-//                        ).checkThresholds(weatherData)
-//                    ) {
-//                        // Trigger an alert
-//                        // This could be a notification, a dialog, or a simple log message
-//                        Log.d("WeatherAlert", "Threshold exceeded for $weatherData")
-//                    }
 
                     //check if temperature is more than max temp or less than min temp
                     val maxTempThreshold = sharedPref.getThresholdMaxTemp()
@@ -363,20 +368,33 @@ class MainActivity : AppCompatActivity() {
         handler.removeCallbacks(runnable)
     }
 
-    //simulating weather data
-    //for testing purpose
-//    fun simulateWeatherData(): WeatherData {
-//        // Simulate or input specific weather data here
-//        // For simplicity, returning a hardcoded value
-//        return WeatherData(temperature = 30.0, condition = "Rain")
-//    }
-//
-//    fun triggerAlertIfNeeded() {
-//        val weatherData = simulateWeatherData()
-//        if (checkThresholds(weatherData)) {
-//            // Trigger an alert
-//            Log.d("Alert", "Weather threshold exceeded: $weatherData")
-//            // You can extend this to show notifications or any other form of alert
-//        }
-//    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun scheduleDailySummaryWorker() {
+        val currentDate = Calendar.getInstance()
+
+        // Set the time to 12:00 AM
+        val dueDate = Calendar.getInstance()
+        dueDate.set(Calendar.HOUR_OF_DAY, 0)
+        dueDate.set(Calendar.MINUTE, 0)
+        dueDate.set(Calendar.SECOND, 0)
+
+        if (dueDate.before(currentDate)) {
+            dueDate.add(Calendar.HOUR_OF_DAY, 24)
+        }
+
+        val timeDiff = dueDate.timeInMillis - currentDate.timeInMillis
+
+        val dailyWorkRequest = PeriodicWorkRequestBuilder<DailySummaryWorker>(1, TimeUnit.DAYS)
+            .setInitialDelay(timeDiff, TimeUnit.MILLISECONDS)
+            .build()
+
+        WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(
+            "DailySummaryWorker",
+            ExistingPeriodicWorkPolicy.REPLACE,
+            dailyWorkRequest
+        )
+    }
+
+
 }

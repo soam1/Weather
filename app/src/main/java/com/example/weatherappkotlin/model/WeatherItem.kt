@@ -1,4 +1,4 @@
-package com.example.weatherappkotlin
+package com.example.weatherappkotlin.model
 
 data class WeatherItem(
     val base: String,

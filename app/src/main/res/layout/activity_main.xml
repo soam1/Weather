@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/sunny_background"
-    tools:context=".MainActivity">
+    tools:context=".ui.MainActivity">
 
 
     <SearchView
@@ -111,6 +111,16 @@
         android:background="@null"
         android:src="@drawable/baseline_settings_24"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/min" />
+
+    <ImageButton
+        android:id="@+id/moreButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="20dp"
+        android:background="@null"
+        android:src="@drawable/baseline_read_more_24"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/min" />
 
     <TextView

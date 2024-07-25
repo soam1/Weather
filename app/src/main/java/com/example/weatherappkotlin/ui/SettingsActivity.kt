@@ -1,4 +1,4 @@
-package com.example.weatherappkotlin
+package com.example.weatherappkotlin.ui
 
 import android.os.Bundle
 import android.widget.Toast
@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.EditTextPreference
 import androidx.preference.ListPreference
 import androidx.preference.PreferenceFragmentCompat
+import com.example.weatherappkotlin.R
+import com.example.weatherappkotlin.SharedPref
 
 class SettingsActivity : AppCompatActivity() {
 
