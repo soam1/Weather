@@ -72,10 +72,12 @@ components from the business logic and data access. Here's a brief overview of t
 Before you begin, ensure you have met the following requirements:
 
 - Android Studio Arctic Fox (or newer)
-- Android SDK 21+
+- Android SDK 26+
 - An internet connection for fetching weather data
 
 ### Installation
+
+**BEST WAY IS TO JUST INSTALL THE APK FILE PROVIDED IN THE REPO (in your android device)**
 
 1. **Clone the repository**:
 
