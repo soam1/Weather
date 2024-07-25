@@ -53,10 +53,9 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(binding.root)
         sharedPref = SharedPref(this)
-
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         scheduleDailySummaryWorker()
-//        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         if (sharedPref.getLastCity() != null) {
             lastCity = sharedPref.getLastCity().toString()
             fetchWeatherData(lastCity)
@@ -115,6 +114,14 @@ class MainActivity : AppCompatActivity() {
                 call: retrofit2.Call<WeatherItem>, response: retrofit2.Response<WeatherItem>
             ) {
                 val weatherDataResponseBody = response.body()
+                if (weatherDataResponseBody == null) {
+                    Toast.makeText(
+                        this@MainActivity,
+                        "No such city found\nEnter valid city name",
+                        Toast.LENGTH_LONG
+                    )
+                        .show()
+                }
                 if (response.isSuccessful && weatherDataResponseBody != null) {
                     // Use the weatherData as needed
                     val temperature = weatherDataResponseBody.main.temp.toString()
@@ -155,32 +162,22 @@ class MainActivity : AppCompatActivity() {
 
                     }
 
-//                    binding.temp.text = "$temperature °C"
                     binding.weather.text = condition
-                    //similarly for max and min temp
-//                    binding.max.text = "Max: $maxTemp °C"
-//                    binding.min.text = "Min: $minTemp °C"
-//                    binding.feelslike.text = "feels like: $feelsLike °C"
                     binding.humidity.text = "$humidity %"
                     binding.sea.text = "$seaLevel hPa"
-//                    binding.windspeed.text = "$windSpeed m/s"
                     binding.sunrise.text = "${time(sunrise)}"
                     binding.sunset.text = "${time(sunset)}"
                     binding.condition.text = condition
                     binding.day.text = dayName(System.currentTimeMillis())
-//                    binding.date.text = getDate()
                     binding.date.text = date()
                     binding.cityName.text = weatherDataResponseBody.name
-//                        binding.cityName.text = cityName
                     binding.updated.text = "Updated at: ${time(System.currentTimeMillis())}"
                     val lastUpdateTime = time(weatherDataResponseBody.dt.toLong())
-                    binding.updated.text =
-                        "Last updated at: ${lastUpdateTime}"
+                    binding.updated.text = "Last updated at: ${lastUpdateTime}"
 
                     sharedPref.saveLastCity(weatherDataResponseBody.name)
 
                     changeImagesAccordingToWeatherCondition(condition)
-
 
                     //check if temperature is more than max temp or less than min temp
                     val maxTempThreshold = sharedPref.getThresholdMaxTemp()
@@ -211,17 +208,12 @@ class MainActivity : AppCompatActivity() {
                         if (vibrator.hasVibrator()) {
                             // Vibrate for 500 milliseconds
                             // For API 26 or above
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                vibrator.vibrate(
-                                    VibrationEffect.createOneShot(
-                                        500,
-                                        VibrationEffect.DEFAULT_AMPLITUDE
-                                    )
+                            vibrator.vibrate(
+                                VibrationEffect.createOneShot(
+                                    1000,
+                                    VibrationEffect.DEFAULT_AMPLITUDE
                                 )
-                            } else {
-                                // Deprecated in API 26
-                                vibrator.vibrate(500)
-                            }
+                            )
                         }
 
                         // Create an AlertDialog Builder
@@ -254,17 +246,12 @@ class MainActivity : AppCompatActivity() {
                         if (vibrator.hasVibrator()) {
                             // Vibrate for 500 milliseconds
                             // For API 26 or above
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                vibrator.vibrate(
-                                    VibrationEffect.createOneShot(
-                                        500,
-                                        VibrationEffect.DEFAULT_AMPLITUDE
-                                    )
+                            vibrator.vibrate(
+                                VibrationEffect.createOneShot(
+                                    1000,
+                                    VibrationEffect.DEFAULT_AMPLITUDE
                                 )
-                            } else {
-                                // Deprecated in API 26
-                                vibrator.vibrate(500)
-                            }
+                            )
                         }
 
                         // Create an AlertDialog Builder
@@ -333,11 +320,6 @@ class MainActivity : AppCompatActivity() {
         return sdf.format(java.util.Date())
     }
 
-    fun getDate(timestamp: Long): String {
-        val sdf = java.text.SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
-        return sdf.format(java.util.Date())
-    }
-
     fun date(): String {
         val sdf = java.text.SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
         return sdf.format(java.util.Date())
@@ -353,10 +335,6 @@ class MainActivity : AppCompatActivity() {
         handler = Handler(Looper.getMainLooper())
         runnable = object : Runnable {
             override fun run() {
-//                if (::lastCity.isInitialized)
-//                    fetchWeatherData(lastCity) // Replace "YourCityName" with the actual city name or a variable
-//                else fetchWeatherData("Meerut")
-//                lastCity = sharedPref.getLastCity().toString()
                 fetchWeatherData(lastCity)
                 handler.postDelayed(this, interval)
             }
@@ -369,7 +347,6 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun scheduleDailySummaryWorker() {
         val currentDate = Calendar.getInstance()
 
@@ -395,6 +372,5 @@ class MainActivity : AppCompatActivity() {
             dailyWorkRequest
         )
     }
-
 
 }
