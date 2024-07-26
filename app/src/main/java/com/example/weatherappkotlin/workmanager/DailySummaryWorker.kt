@@ -2,6 +2,7 @@ package com.example.weatherappkotlin.worker
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.example.weatherappkotlin.data.DailySummary
@@ -57,5 +58,7 @@ class DailySummaryWorker(
             putExtra("dominantCondition", dailySummary.dominantCondition)
         }
         applicationContext.sendBroadcast(intent)
+        Log.d("DailySummaryWorker", "Broadcast sent with data: $dailySummary")
+
     }
 }

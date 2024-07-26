@@ -77,7 +77,7 @@ Before you begin, ensure you have met the following requirements:
 
 ### Installation
 
-**BEST WAY IS TO JUST INSTALL THE APK FILE PROVIDED IN THE REPO (in your android device)**
+**BEST WAY IS TO JUST INSTALL THE APK FILE PROVIDED IN THE REPO (in your android device, device must be above android OREO)**
 
 1. **Clone the repository**:
 

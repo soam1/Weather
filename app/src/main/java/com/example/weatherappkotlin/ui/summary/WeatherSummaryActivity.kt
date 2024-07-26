@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -43,6 +44,11 @@ class WeatherSummaryActivity : AppCompatActivity() {
                     minTemperature = minTemperature,
                     dominantCondition = dominantCondition
                 )
+                Log.d(
+                    "WeatherSummaryActivity  !!!!!!!!!!!!!!!!!!!",
+                    "Broadcast received with data: $dailySummary"
+                )
+
                 bindTodaySummary(dailySummary)
             }
         }
@@ -86,6 +92,7 @@ class WeatherSummaryActivity : AppCompatActivity() {
         val summaries = viewModel.getAllSummaries()
         setupTemperatureChart(temperatureChart, summaries)
         setupConditionChart(conditionChart, summaries)
+
     }
 
     private fun bindTodaySummary(summary: DailySummary) {
@@ -94,6 +101,8 @@ class WeatherSummaryActivity : AppCompatActivity() {
         binding.todayMaxTemperature.text = "Maximum Temperature: ${summary.maxTemperature}"
         binding.todayMinTemperature.text = "Minimum Temperature: ${summary.minTemperature}"
         binding.todayDominantCondition.text = "Dominant Condition: ${summary.dominantCondition}"
+        Log.d("WeatherSummaryActivity !!!!!!!!!!!!!!!", "UI updated with data: $summary")
+
     }
 
     private fun setupTemperatureChart(chart: LineChart, summaries: List<DailySummary>) {
